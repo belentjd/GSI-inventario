@@ -1,0 +1,31 @@
+---
+interface Props { active: 'people' | 'objects' | 'scenario' | 'sprite' }
+import { basePath } from '../lib/paths';
+const { active } = Astro.props;
+const links = [
+  { href: basePath, label: 'Personas', key: 'people' },
+  { href: `${basePath}objetos/`, label: 'Objetos', key: 'objects' },
+  { href: `${basePath}escenario/`, label: 'Escenario', key: 'scenario' },
+  { href: `${basePath}crear-sprite/`, label: 'Crear sprite', key: 'sprite' },
+] as const;
+---
+<header class="border-b border-[#263646] bg-[#0d1722]">
+  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-4 md:px-8">
+    <a class="flex items-center gap-3 text-white" href={basePath} aria-label="Inventario GSI, personas">
+      <span class="grid size-10 place-items-center border border-accent/40 bg-accent/10 font-mono text-sm font-bold text-accent">GSI</span>
+      <span class="text-lg font-bold tracking-tight">Inventario <span class="text-accent">GSI</span></span>
+    </a>
+    <nav class="flex flex-wrap gap-1 text-sm font-medium" aria-label="Navegación principal">
+      {links.map(({ href, label, key }) => (
+        <a
+          href={href}
+          aria-current={active === key ? 'page' : undefined}
+          class:list={[
+            'border border-transparent px-3 py-2 transition-colors',
+            active === key ? 'border-accent/60 bg-accent/10 text-accent' : 'text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white',
+          ]}
+        >{label}</a>
+      ))}
+    </nav>
+  </div>
+</header>

@@ -1,23 +1,33 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import { basePath } from '../lib/paths';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+interface Props {
+  title: string;
+  description: string;
+  active: 'people' | 'objects' | 'scenario' | 'sprite';
+  wide?: boolean;
+}
+
+const { title, description, active, wide = false } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a1019" />
+    <meta name="description" content={description} />
+    <link rel="icon" href={`${basePath}favicon.svg`} />
+    <title>{title} · Inventario GSI</title>
+  </head>
+  <body>
+    <div class="min-h-screen bg-[#0a1019]">
+      <SiteHeader active={active} />
+      <main class:list={wide ? 'w-full pb-10' : 'mx-auto max-w-7xl px-5 pb-20 pt-10 md:px-8'}>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
