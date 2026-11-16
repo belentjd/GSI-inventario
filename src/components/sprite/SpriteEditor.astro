@@ -1,0 +1,128 @@
+---
+import {
+  BEARD_STYLES, DEFAULT_SPRITE, EYE_COLORS, EYE_STYLES, FACE_SHAPES, GLASSES_STYLES, HAIR_COLORS,
+  HAIR_STYLES, HAT_COLORS, HAT_STYLES, MOUTH_STYLES, SKIN_COLORS,
+} from '../../lib/sprite';
+---
+<div class="mb-7">
+  <p class="font-mono text-xs uppercase tracking-[.2em] text-accent">Pixel art</p>
+  <h1 class="mt-1 text-3xl font-bold text-white">Crear sprite</h1>
+  <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-400">Diseña una cara pixel art con cabello, gafas y gorros. El PNG exportado usará el mismo Id que la persona en el CSV.</p>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem]">
+  <form id="sprite-form" class="panel grid gap-6 p-5 md:p-7" autocomplete="off">
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="text-sm font-medium text-slate-200">Nombre del personaje
+        <input id="sprite-name" name="name" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent" type="text" maxlength="60" placeholder="Nombre visible" required />
+      </label>
+      <label class="text-sm font-medium text-slate-200">Id del CSV
+        <input id="sprite-id" name="id" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 font-mono text-white outline-none focus:border-accent" type="text" inputmode="text" pattern="[A-Za-z0-9_-]+" maxlength="40" placeholder="Ejemplo: 002" required aria-describedby="id-help" />
+      </label>
+    </div>
+    <p id="id-help" class="-mt-4 text-xs leading-5 text-slate-400">Escribe el Id exacto de la fila en Personas. Se admiten letras, números, guiones y guiones bajos. El archivo se llamará <code>&lt;Id&gt;.png</code>.</p>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="text-sm font-medium text-slate-200">Cabello
+        <select name="hairStyle" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent">
+          {HAIR_STYLES.map(({ value, label }) => <option value={value}>{label}</option>)}
+        </select>
+      </label>
+      <label class="text-sm font-medium text-slate-200">Forma de la cara
+        <select name="faceShape" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent">
+          {FACE_SHAPES.map(({ value, label }) => <option value={value}>{label}</option>)}
+        </select>
+      </label>
+      <label class="text-sm font-medium text-slate-200">Barba
+        <select name="beardStyle" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent">
+          {BEARD_STYLES.map(({ value, label }) => <option value={value}>{label}</option>)}
+        </select>
+      </label>
+      <label class="text-sm font-medium text-slate-200">Ojos
+        <select name="eyeStyle" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent">
+          {EYE_STYLES.map(({ value, label }) => <option value={value}>{label}</option>)}
+        </select>
+      </label>
+      <label class="text-sm font-medium text-slate-200">Gafas
+        <select name="glasses" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent">
+          {GLASSES_STYLES.map(({ value, label }) => <option value={value}>{label}</option>)}
+        </select>
+      </label>
+      <label class="text-sm font-medium text-slate-200">Gorro
+        <select name="hatStyle" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent">
+          {HAT_STYLES.map(({ value, label }) => <option value={value} selected={value === DEFAULT_SPRITE.hatStyle}>{label}</option>)}
+        </select>
+      </label>
+      <label class="text-sm font-medium text-slate-200">Boca
+        <select name="mouth" class="mt-2 block w-full border border-[#34495b] bg-[#0c1723] px-3 py-2 text-white outline-none focus:border-accent">
+          {MOUTH_STYLES.map(({ value, label }) => <option value={value}>{label}</option>)}
+        </select>
+      </label>
+    </div>
+
+    <fieldset>
+      <legend class="mb-3 text-sm font-medium text-slate-200">Color de piel</legend>
+      <div class="flex flex-wrap gap-3">
+        {SKIN_COLORS.map(({ label, color }, index) => (
+          <label class="cursor-pointer" title={label}>
+            <input class="peer sr-only" type="radio" name="skinColor" value={color} checked={index === 1} aria-label={label} />
+            <span class="block size-10 border-2 border-[#34495b] peer-checked:border-white peer-checked:ring-2 peer-checked:ring-accent" style={`background-color:${color}`}></span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="mb-3 text-sm font-medium text-slate-200">Color de cabello</legend>
+      <div class="flex flex-wrap gap-3">
+        {HAIR_COLORS.map(({ label, color }, index) => (
+          <label class="cursor-pointer" title={label}>
+            <input class="peer sr-only" type="radio" name="hairColor" value={color} checked={index === 1} aria-label={label} />
+            <span class="block size-10 border-2 border-[#34495b] peer-checked:border-white peer-checked:ring-2 peer-checked:ring-accent" style={`background-color:${color}`}></span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="mb-3 text-sm font-medium text-slate-200">Color de ojos</legend>
+      <div class="flex flex-wrap gap-3">
+        {EYE_COLORS.map(({ label, color }, index) => (
+          <label class="cursor-pointer" title={label}>
+            <input class="peer sr-only" type="radio" name="eyeColor" value={color} checked={index === 0} aria-label={label} />
+            <span class="block size-10 border-2 border-[#34495b] peer-checked:border-white peer-checked:ring-2 peer-checked:ring-accent" style={`background-color:${color}`}></span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="mb-3 text-sm font-medium text-slate-200">Color del gorro</legend>
+      <div class="flex flex-wrap gap-3">
+        {HAT_COLORS.map(({ label, color }, index) => (
+          <label class="cursor-pointer" title={label}>
+            <input class="peer sr-only" type="radio" name="hatColor" value={color} checked={index === 0} aria-label={label} />
+            <span class="block size-10 border-2 border-[#34495b] peer-checked:border-white peer-checked:ring-2 peer-checked:ring-accent" style={`background-color:${color}`}></span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <label class="flex items-center gap-3 text-sm text-slate-200">
+      <input name="freckles" type="checkbox" class="size-4 accent-accent" /> Pecas
+    </label>
+  </form>
+
+  <aside class="panel h-fit p-5 lg:sticky lg:top-5">
+    <p class="font-mono text-xs uppercase tracking-[.2em] text-accent">Vista previa</p>
+    <div class="sprite-preview mt-4 grid aspect-square place-items-center border border-[#34495b]">
+      <canvas id="sprite-canvas" width="200" height="200" class="h-full w-full" role="img" aria-label="Vista previa del sprite recortado a 200 por 200 píxeles"></canvas>
+    </div>
+    <p id="sprite-caption" class="mt-4 text-center text-sm text-slate-300">Tu personaje aparecerá aquí</p>
+    <button id="sprite-download" type="button" class="mt-5 w-full bg-accent px-4 py-3 font-semibold text-[#09201c] transition-colors hover:bg-[#45BDE5] disabled:cursor-not-allowed disabled:opacity-50">Descargar PNG</button>
+    <p id="sprite-message" class="mt-3 min-h-5 text-sm text-slate-300" role="status" aria-live="polite"></p>
+    <p class="mt-4 border-t border-[#293a4a] pt-4 text-xs leading-5 text-slate-400">Después de descargarlo, añade <code>&lt;Id&gt;.png</code> a <code>src/assets/sprites/</code> y despliega la web. El escenario y la lista de personas lo mostrarán para el Id correspondiente.</p>
+  </aside>
+</div>
+
+<script>import '../../scripts/sprite-editor.ts';</script>
