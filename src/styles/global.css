@@ -208,6 +208,15 @@ button { cursor: pointer; }
 .inventory-table td { color: #d9e4ed; }
 .inventory-table td:first-child { color: var(--accent); font-family: ui-monospace, monospace; }
 
+.object-code {
+  display: inline-block;
+  border: 1px solid currentColor;
+  padding: .1rem .4rem;
+  font: 700 .8rem ui-monospace, monospace;
+}
+.object-code[data-tone="pink"] { color: #f2a2c6; background: #392235; }
+.object-code[data-tone="green"] { color: #8dddb2; background: #173a2b; }
+
 .status-dot { display: inline-block; width: .55rem; height: .55rem; background: #f4b65c; }
 .status-dot[data-state="ok"] { background: var(--accent); }
 .status-dot[data-state="error"] { background: #ef788a; }

@@ -4,6 +4,7 @@ import {
   type InventoryResult,
 } from "../lib/data-source";
 import type { ObjectItem, Person } from "../lib/inventory";
+import { objectCodeTone } from "../lib/object-code";
 import { basePath } from "../lib/paths";
 import { spriteUrl } from "../lib/sprite-assets";
 import { byId, formatTime, label, node, seatLabel } from "./dom";
@@ -124,9 +125,16 @@ function appendObjects(detail: HTMLElement, seat: number | null): void {
       const entry = node("li");
       const link = node(
         "a",
-        `${item.id} · ${label(item.name)}${item.description ? ` · ${item.description}` : ""}`,
+        undefined,
         "text-accent hover:underline focus-visible:underline",
       );
+      const code = node("span", item.id);
+      const tone = objectCodeTone(item.id);
+      if (tone) {
+        code.className = "object-code";
+        code.dataset.tone = tone;
+      }
+      link.append(code, document.createTextNode(` · ${label(item.name)}${item.description ? ` · ${item.description}` : ""}`));
       link.href = `${basePath}objetos/?objeto=${encodeURIComponent(item.id)}`;
       link.setAttribute("aria-label", `Ver objeto ${item.id}: ${label(item.name)}`);
       entry.append(link);

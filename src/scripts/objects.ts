@@ -1,5 +1,6 @@
 import { loadObjects, type InventoryResult } from '../lib/data-source';
 import type { ObjectItem } from '../lib/inventory';
+import { objectCodeTone } from '../lib/object-code';
 import { byId, emptyRow, label, node, normalize, seatLabel, showResult } from './dom';
 
 let result: InventoryResult<ObjectItem> = { data: null, updatedAt: null, error: null };
@@ -21,7 +22,16 @@ function render(): void {
       : normalize([item.id, item.name, item.description, seatLabel(item.seat)].join(' ')).includes(query));
   const rows = filtered.map((item) => {
     const row = node('tr');
-    [item.id, label(item.name), label(item.description), seatLabel(item.seat)]
+    const idCell = node('td');
+    const code = node('span', item.id);
+    const tone = objectCodeTone(item.id);
+    if (tone) {
+      code.className = 'object-code';
+      code.dataset.tone = tone;
+    }
+    idCell.append(code);
+    row.append(idCell);
+    [label(item.name), label(item.description), seatLabel(item.seat)]
       .forEach((value) => row.append(node('td', value)));
     return row;
   });
