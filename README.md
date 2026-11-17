@@ -58,6 +58,6 @@ Abre cada archivo CSV en Google Sheets y guárdalo como una hoja de cálculo de 
 
 ## GitHub Pages
 
-El workflow `.github/workflows/deploy.yml` compila y publica al hacer push a `master` o al ejecutarlo manualmente. Configura un remoto de GitHub para este repositorio y selecciona **GitHub Actions** como origen en **Settings → Pages**. Astro calcula `site` y `base` a partir de `GITHUB_REPOSITORY`, por lo que funciona con la ruta habitual `https://usuario.github.io/nombre-repo/` sin editar la configuración. El build local usa `/`.
+El workflow `.github/workflows/deploy.yml` compila y publica al hacer push a `main` o `master`, o al ejecutarlo manualmente. Para `sergioCaceresMC/GSI-inventario`, selecciona **GitHub Actions** como origen en **Settings → Pages**. Astro calcula `site` y `base` a partir de `GITHUB_REPOSITORY`, por lo que la web se sirve en `https://sergioCaceresMC.github.io/GSI-inventario/`. El build local usa `/`.
 
 El workflow no modifica los CSV: los datos se leen desde el navegador de cada visitante. GitHub Pages solo sirve HTML, CSS, JavaScript y la imagen del mapa.
