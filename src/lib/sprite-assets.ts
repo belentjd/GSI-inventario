@@ -6,5 +6,7 @@ const sprites = import.meta.glob('../assets/sprites/*.png', {
 }) as Record<string, string>;
 
 export function spriteUrl(id: string | null): string | null {
-  return id ? sprites[`../assets/sprites/${id}.png`] ?? null : null;
+  return (id ? sprites[`../assets/sprites/${id}.png`] : null)
+    ?? sprites['../assets/sprites/0.png']
+    ?? null;
 }

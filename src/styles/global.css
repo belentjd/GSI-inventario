@@ -113,14 +113,20 @@ button { cursor: pointer; }
 .seat-label {
   display: grid;
   place-items: center;
-  width: clamp(1rem, 2.5vw, 1.6rem);
-  height: clamp(1rem, 2.5vw, 1.6rem);
+  width: clamp(1.75rem, 2.5vw, 2rem);
+  height: clamp(1.75rem, 2.5vw, 2rem);
   border: 1px solid #bbd0d8a8;
   border-radius: 0;
   background: #07131cdb;
   color: #ebf8f6;
   font: 700 clamp(.55rem, 1.2vw, .72rem) ui-monospace, monospace;
-  pointer-events: none;
+  cursor: pointer;
+}
+.seat-label:hover, .seat-label:focus-visible, .seat-label[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: #123c52;
+  outline: 2px solid var(--accent);
+  z-index: 3;
 }
 
 .avatar {
@@ -211,7 +217,7 @@ button { cursor: pointer; }
   .map-scroll { scrollbar-color: var(--accent) #111c2a; }
   .map-mobile-hint { display: block; padding: .75rem 1.25rem 0; color: #a9bdca; font-size: .8rem; }
   .person-menu-toggle { top: .5rem; right: .5rem; }
-  .seat-label { width: 1.25rem; height: 1.25rem; font-size: .65rem; }
+  .seat-label { width: 2rem; height: 2rem; font-size: .65rem; }
   .avatar.has-sprite { width: 3.25rem; height: 3.25rem; }
   .avatar:not(.has-sprite) { width: 2rem; height: 2rem; }
   .person-drawer { width: min(26rem, 100vw); }

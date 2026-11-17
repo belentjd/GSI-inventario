@@ -44,7 +44,7 @@ En **Crear sprite**, escribe un nombre visible y un `Id` formado por letras, nú
 
 1. Usa el `Id` exacto de la persona correspondiente en la hoja publicada. Si una persona aún no tiene Id, asígnale uno antes de publicar su sprite.
 2. Copia el PNG descargado a `src/assets/sprites/<Id>.png` y haz commit.
-3. Despliega de nuevo la web. Astro incorpora los PNG durante el build; el escenario usa el sprite cuando encuentra un archivo cuyo nombre coincide con el Id. Si no existe, muestra las iniciales de la persona.
+3. Despliega de nuevo la web. Astro incorpora los PNG durante el build; el escenario y la lista de personas usan el sprite cuyo nombre coincide con el Id. Si no existe, muestran `0.png` como imagen genérica.
 
 La creación y descarga funcionan enteramente en el navegador. GitHub Pages no puede escribir en `src/assets`; añadir el PNG al repositorio es un paso manual. Cambios en la hoja publicada se leen al recargar, mientras que añadir o modificar sprites requiere un nuevo despliegue.
 

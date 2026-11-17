@@ -8,11 +8,11 @@ import mapImage from '../../assets/gsimap.png';
         <img class="map-image" src={mapImage.src} alt="Plano pixelado de las dos salas" width={832} height={480} />
       </div>
     </div>
-    <button id="person-menu-toggle" class="person-menu-toggle" type="button" aria-controls="person-drawer" aria-expanded="false" aria-label="Abrir ficha de persona">
+    <button id="person-menu-toggle" class="person-menu-toggle" type="button" aria-controls="person-drawer" aria-expanded="false" aria-label="Abrir ficha del puesto">
       <span class="menu-bars" aria-hidden="true"><span></span><span></span><span></span></span>
     </button>
   </div>
-  <p class="map-mobile-hint">Desliza el mapa para ver las dos salas. Toca una cara para abrir su ficha.</p>
+  <p class="map-mobile-hint">Desliza el mapa para ver las dos salas. Toca una cara o el número de un puesto para abrir su ficha.</p>
   <!--
   <div class="scenario-meta">
     <div class="flex flex-wrap items-center justify-between gap-3">
@@ -23,13 +23,13 @@ import mapImage from '../../assets/gsimap.png';
     <p id="last-updated" class="mt-3 text-right text-xs text-slate-500"></p>
   </div>
   -->
-  <dialog id="person-drawer" class="person-drawer" aria-label="Información de la persona">
+  <dialog id="person-drawer" class="person-drawer" aria-label="Información del puesto">
     <div class="flex items-center justify-between gap-4 border-b border-[#293a4a] pb-4">
       <p class="font-mono text-xs uppercase tracking-[.2em] text-accent">Ficha de puesto</p>
       <button id="person-drawer-close" class="drawer-close" type="button" aria-label="Cerrar ficha">×</button>
     </div>
     <div id="person-detail" class="pt-5" aria-live="polite">
-      <p class="text-sm leading-6 text-slate-400">Selecciona una persona en el mapa para ver sus datos.</p>
+      <p class="text-sm leading-6 text-slate-400">Selecciona una persona o un puesto en el mapa para ver sus datos.</p>
     </div>
   </dialog>
 </section>

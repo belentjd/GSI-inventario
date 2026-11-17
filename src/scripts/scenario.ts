@@ -35,6 +35,7 @@ let objects: InventoryResult<ObjectItem> = {
   error: null,
 };
 let selectedId: string | null = null;
+let selectedSeat: number | null = null;
 const drawer = byId<HTMLDialogElement>("person-drawer");
 const menuToggle = byId<HTMLButtonElement>("person-menu-toggle");
 const drawerClose = byId<HTMLButtonElement>("person-drawer-close");
@@ -56,7 +57,7 @@ function openDrawer(trigger: HTMLElement): void {
   drawerTrigger = trigger;
   if (!drawer.open) drawer.showModal();
   menuToggle.setAttribute("aria-expanded", "true");
-  menuToggle.setAttribute("aria-label", "Cerrar ficha de persona");
+  menuToggle.setAttribute("aria-label", "Cerrar ficha del puesto");
   drawerClose.focus();
 }
 
@@ -67,7 +68,7 @@ menuToggle.addEventListener("click", () => {
 drawerClose.addEventListener("click", () => drawer.close());
 drawer.addEventListener("close", () => {
   menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", "Abrir ficha de persona");
+  menuToggle.setAttribute("aria-label", "Abrir ficha del puesto");
   (drawerTrigger.isConnected ? drawerTrigger : menuToggle).focus();
 });
 drawer.addEventListener("click", (event) => {
@@ -105,10 +106,72 @@ function detailLine(title: string, value: string): HTMLElement {
   return wrapper;
 }
 
+function appendObjects(detail: HTMLElement, seat: number | null): void {
+  const assigned = seat === null ? [] : objects.data?.filter((item) => item.seat === seat) ?? [];
+  detail.append(
+    node(
+      "p",
+      `Objetos del puesto · ${objects.data ? assigned.length : "—"}`,
+      "mt-5 text-xs font-semibold uppercase tracking-wider text-slate-400",
+    ),
+  );
+  const list = node("ul", undefined, "mt-2 space-y-1 text-sm text-slate-200");
+  if (!objects.data)
+    list.append(node("li", objects.error ? "No se pudieron cargar los objetos." : "Cargando objetos…"));
+  else if (!assigned.length) list.append(node("li", "Sin objetos asignados."));
+  else
+    assigned.forEach((item) => {
+      const entry = node("li");
+      const link = node(
+        "a",
+        `${item.id} · ${label(item.name)}${item.description ? ` · ${item.description}` : ""}`,
+        "text-accent hover:underline focus-visible:underline",
+      );
+      link.href = `${basePath}objetos/?objeto=${encodeURIComponent(item.id)}`;
+      link.setAttribute("aria-label", `Ver objeto ${item.id}: ${label(item.name)}`);
+      entry.append(link);
+      list.append(entry);
+    });
+  detail.append(list);
+}
+
+function updateSelection(): void {
+  byId("map-board")
+    .querySelectorAll<HTMLButtonElement>(".avatar")
+    .forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.personId === selectedId)));
+  byId("map-board")
+    .querySelectorAll<HTMLButtonElement>(".seat-label")
+    .forEach((button) => button.setAttribute("aria-pressed", String(Number(button.dataset.seat) === selectedSeat)));
+}
+
+function selectSeat(seat: number, trigger: HTMLElement): void {
+  selectedId = null;
+  selectedSeat = seat;
+  const occupants = people.data?.filter((person) => person.seat === seat) ?? [];
+  const detail = byId("person-detail");
+  detail.replaceChildren(
+    node("p", "Puesto", "font-mono text-xs uppercase tracking-[.2em] text-accent"),
+    node("h2", String(seat), "mt-2 text-2xl font-bold text-white"),
+    node(
+      "p",
+      people.data === null
+        ? people.error ? "No se pudieron cargar las personas." : "Cargando personas…"
+        : occupants.length
+          ? `Personas asignadas: ${occupants.map((person) => person.name).join(", ")}`
+          : "Sin personas asignadas.",
+      "mt-4 text-sm text-slate-300",
+    ),
+  );
+  appendObjects(detail, seat);
+  updateSelection();
+  openDrawer(trigger);
+}
+
 function selectPerson(id: string, trigger: HTMLElement = menuToggle): void {
   const person = people.data?.find((item) => item.id === id);
   if (!person) return;
   selectedId = id;
+  selectedSeat = null;
   const detail = byId("person-detail");
   const intro = node("div", undefined, "flex items-center gap-4");
   const portrait = node("div", undefined, "detail-avatar");
@@ -140,42 +203,8 @@ function selectPerson(id: string, trigger: HTMLElement = menuToggle): void {
   );
   detail.append(details);
 
-  const assigned =
-    objects.data?.filter((item) => item.seat === person.seat) ?? [];
-  detail.append(
-    node(
-      "p",
-      `Objetos del puesto · ${objects.data ? assigned.length : "—"}`,
-      "mt-5 text-xs font-semibold uppercase tracking-wider text-slate-400",
-    ),
-  );
-  const list = node("ul", undefined, "mt-2 space-y-1 text-sm text-slate-200");
-  if (!objects.data)
-    list.append(node("li", "No se pudieron cargar los objetos."));
-  else if (!assigned.length) list.append(node("li", "Sin objetos asignados."));
-  else
-    assigned.forEach((item) => {
-      const entry = node("li");
-      const link = node(
-        "a",
-        `${item.id} · ${label(item.name)}${item.description ? ` · ${item.description}` : ""}`,
-        "text-accent hover:underline focus-visible:underline",
-      );
-      link.href = `${basePath}objetos/?objeto=${encodeURIComponent(item.id)}`;
-      link.setAttribute("aria-label", `Ver objeto ${item.id}: ${label(item.name)}`);
-      entry.append(link);
-      list.append(entry);
-    });
-  detail.append(list);
-
-  byId("map-board")
-    .querySelectorAll<HTMLButtonElement>(".avatar")
-    .forEach((button) =>
-      button.setAttribute(
-        "aria-pressed",
-        String(button.dataset.personId === id),
-      ),
-    );
+  appendObjects(detail, person.seat);
+  updateSelection();
   openDrawer(trigger);
 }
 
@@ -185,8 +214,14 @@ function renderMap(): void {
     .querySelectorAll(".seat-label, .avatar")
     .forEach((element) => element.remove());
   seats.forEach(([x, y], index) => {
-    const badge = node("span", String(index + 1), "seat-label");
-    position(badge, x, y - 50);
+    const seat = index + 1;
+    const badge = node("button", String(seat), "seat-label");
+    badge.type = "button";
+    badge.dataset.seat = String(seat);
+    badge.setAttribute("aria-label", `Ver objetos del puesto ${seat}`);
+    badge.setAttribute("aria-pressed", String(selectedSeat === seat));
+    badge.addEventListener("click", () => selectSeat(seat, badge));
+    position(badge, x, y - 56);
     board.append(badge);
     const occupants =
       people.data?.filter((person) => person.seat === index + 1) ?? [];
@@ -259,6 +294,7 @@ void Promise.all([loadPeople(), loadObjects()]).then(
     renderMap();
     const requestedId = new URLSearchParams(location.search).get("persona");
     if (requestedId) selectPerson(requestedId);
+    else if (selectedSeat !== null) selectSeat(selectedSeat, menuToggle);
     showStatus();
   },
 );
